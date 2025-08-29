@@ -3,6 +3,7 @@
 import json
 import asyncio
 import aiohttp
+import ssl
 from typing import Dict, List, Optional, Tuple
 from loguru import logger
 import time
@@ -14,7 +15,7 @@ class CompanyMapper:
     """SEC 데이터를 사용하여 회사 티커를 CIK 번호로 매핑하는 클래스."""
     
     def __init__(self):
-        self.base_url = "https://data.sec.gov"
+        self.base_url = "https://www.sec.gov"
         self.headers = {
             "User-Agent": settings.user_agent,
             "Accept": "application/json"
@@ -23,9 +24,16 @@ class CompanyMapper:
     
     async def __aenter__(self):
         """비동기 컨텍스트 매니저 진입."""
+        # SSL 컨텍스트 설정 (개발/테스트용)
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+        
+        connector = aiohttp.TCPConnector(ssl=ssl_context)
         self.session = aiohttp.ClientSession(
             headers=self.headers,
-            timeout=aiohttp.ClientTimeout(total=30)
+            timeout=aiohttp.ClientTimeout(total=30),
+            connector=connector
         )
         return self
     
@@ -87,7 +95,9 @@ class CompanyMapper:
     
     async def get_company_submissions(self, cik: str) -> Dict:
         """SEC에서 회사 제출 내역 가져오기."""
-        url = f"{self.base_url}/submissions/CIK{cik}.json"
+        # submissions API는 data.sec.gov 사용
+        submissions_url = "https://data.sec.gov"
+        url = f"{submissions_url}/submissions/CIK{cik}.json"
         
         try:
             async with self.session.get(url) as response:
