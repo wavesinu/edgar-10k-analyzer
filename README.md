@@ -1,358 +1,405 @@
-# Integrated EDGAR 10-K Analyzer
+# EDGAR 10-K 데이터 분석 파이프라인
 
-A comprehensive system that combines advanced EDGAR crawling capabilities with AI-powered qualitative investment analysis. This integrated platform extracts, processes, and analyzes SEC 10-K filings to provide sophisticated investment insights using natural language processing and large language models.
+EDGAR 공시 데이터 수집 기능과 AI(GPT-4)를 활용한 자연어 처리를 통해 정성적 요소의 분석을 결합한 투자 분석 프로그램입니다. SEC 10-K 보고서를 자동으로 수집하고 처리하며, 자연어 처리와 언어 모델을 활용한 투자 근거 를 제공합니다.
 
-> **🔄 Now with Integrated Extraction Engine**: Enhanced with the power of the edgar-extraction-toolkit for superior data crawling and parsing capabilities.
-
-## 🚀 Features
-
-### 🔍 Advanced Data Extraction
-- **Enhanced EDGAR Crawler**: High-performance async crawler with rate limiting and error recovery
-- **Intelligent Section Parsing**: Advanced text extraction supporting 15+ 10-K sections
-- **Multi-format Support**: HTML, XML, and text filing formats
-- **Legacy Data Migration**: Seamlessly migrate existing extraction toolkit data
-
-### 🧠 AI-Powered Analysis
-- **Qualitative Analysis Engine**: NLP-based sentiment and risk assessment
-- **Investment Advisor AI**: GPT-4 powered investment insights and recommendations
-- **Interactive Chat Interface**: Real-time Q&A with AI investment advisor
-- **Automated Scoring**: Multi-dimensional qualitative scoring system
-
-### 📊 Comprehensive Reporting
-- **Interactive Dashboard**: Real-time investment metrics and company performance
-- **Custom Reports**: Company-specific deep-dive analysis reports
-- **Export Capabilities**: JSON, CSV, and Markdown format support
-- **Scheduled Analysis**: Automated weekly pipeline execution
-
-### ⚡ Performance & Scalability
-- **Async Processing**: High-throughput concurrent operations
-- **Database Integration**: Supabase cloud database with optimized queries
-- **Smart Caching**: Intelligent data caching and incremental updates
-- **Error Recovery**: Robust error handling with automatic retries
-
-## 🏗 Architecture
+## 시스템 구조
 
 ```
 ┌─────────────────────┐    ┌─────────────────────┐    ┌─────────────────────┐
-│   EDGAR API         │    │  Text Processing    │    │   NLP Analysis      │
+│   EDGAR API         │    │  텍스트 처리        │    │   NLP 분석          │
 │                     │    │                     │    │                     │
-│ • Company Mapping   │ -> │ • HTML Parsing      │ -> │ • Sentiment Analysis│
-│ • 10-K Retrieval    │    │ • Section Extract   │    │ • Theme Extraction  │
-│ • Filing Downloads  │    │ • Text Cleaning     │    │ • Risk Assessment   │
+│ • 기업 매핑         │ -> │ • HTML 파싱         │ -> │ • 감성 분석         │
+│ • 10-K 검색         │    │ • 섹션 추출         │    │ • 주제 추출         │
+│ • 파일 다운로드     │    │ • 텍스트 정제       │    │ • 위험 평가         │
 └─────────────────────┘    └─────────────────────┘    └─────────────────────┘
                                                                    │
 ┌─────────────────────┐    ┌─────────────────────┐    ┌─────────────────────┐
-│   Reporting         │    │   Supabase DB       │    │ Investment Scoring  │
+│   보고서 생성       │    │   Supabase DB       │    │ 투자 평가           │
 │                     │    │                     │    │                     │
-│ • Dashboard         │ <- │ • Companies         │ <- │ • Composite Scoring │
-│ • Investment Report │    │ • Filings           │    │ • Recommendations   │
-│ • Company Analysis  │    │ • Analysis Results  │    │ • Peer Comparison   │
+│ • 대시보드          │ <- │ • 기업 정보         │ <- │ • 종합 점수         │
+│ • 투자 리포트       │    │ • 파일링 데이터     │    │ • 투자 추천         │
+│ • 기업 분석         │    │ • 분석 결과         │    │ • 동종업계 비교     │
 └─────────────────────┘    └─────────────────────┘    └─────────────────────┘
 ```
 
-## 📦 Installation
+## 투자 분석 접근법
 
-### Prerequisites
+이 프로젝트는 **워런 버핏의 투자 철학**처럼 기업의 본질적 가치와 경영진의 역량을 평가하는 데 중점을 둡니다. AI와 NLP 기술을 활용해 수천 페이지의 10-K 보고서에서 투자에 중요한 정성적 신호를 자동으로 추출하고 평가합니다.
 
-- Python 3.8+
-- Supabase account and database
-- SEC API compliance (proper User-Agent header)
+## 왜 정성적 분석인가요?
 
-### Setup
+전통적인 정량적 분석(재무제표, 재무비율 등)방법은 이미 시장에 충분히 반영되어 있으며 대부분의 투자자들이 접근 가능한 정보입니다. 하지만 10-K 보고서에 담긴 **경영진의 논의와 분석(MD&A)**, **위험 요소**, **사업 전략** 등의 텍스트 정보는 다음과 같은 이유로 정성적 요소와는 다른 투자 가치를 제공합니다:
 
-1. **Clone the repository**
+### 정성적 요소의 기반한 분석 방식의 장점
+
+1. **미래 지향적 정보**: 재무제표는 과거 실적을 보여주지만, 경영진의 서술은 미래 전략과 비전을 담고 있습니다
+2. **조기 경고 신호**: 재무 지표에 나타나기 전, 텍스트에서 먼저 위험 신호나 기회를 포착할 수 있습니다
+3. **경영진의 진정성**: AI를 통해 경영진 메시지의 톤, 확신도, 일관성을 분석하여 숨겨진 의도를 파악합니다
+4. **맥락적 이해**: 숫자만으로는 알 수 없는 비즈니스 환경, 경쟁 상황, 규제 변화를 종합적으로 이해합니다
+5. **정보 비대칭 활용**: 방대한 텍스트를 모두 읽고 분석하는 투자자는 많지 않아, 정보 우위를 확보할 수 있습니다
+
+## 어떤 정성적 요소를 다루나요?
+
+### 10-K 보고서에서 추출하는 섹션
+
+| Item | 섹션명 | 추출하는 정보 | 선정 이유 |
+|------|--------|---------------|-----------|
+| **Item 1** | Business | • 사업 모델 및 운영 현황<br>• 경쟁 환경 및 시장 지위<br>• 제품/서비스 포트폴리오<br>• 주요 고객 및 공급업체 | 기업의 **핵심 비즈니스**를 이해하고 경쟁우위와 성장동력을 파악하기 위해 필수적 |
+| **Item 1A** | Risk Factors | • 시장/운영/규제/재무 위험<br>• 위험의 심각도 및 발생가능성<br>• 사이버 보안 및 기술 위험<br>• 경쟁 및 전략적 위험 | 투자 의사결정에서 **위험 평가**가 수익률만큼 중요하며, 조기 경고 신호를 포착할 수 있음 |
+| **Item 7** | MD&A | • 경영진의 재무 상황 해석<br>• 미래 전망 및 전략 방향<br>• 시장 동향에 대한 견해<br>• 자본 배분 계획 | 경영진의 **진정성과 통찰력**을 평가하고 미래 지향적 정보를 획득할 수 있음 |
+| **Item 7A** | Quantitative/Qualitative Disclosures | • 시장 위험 노출도<br>• 파생상품 사용 현황<br>• 금리/환율 민감도<br>• 위험 관리 정책 | **금융 위험 관리** 역량과 시장 변동에 대한 노출도를 정확히 평가할 수 있음 |
+
+### 정성적 분석 항목별 세부 요소
+
+#### **📈 성장 및 기회 지표**
+- **혁신 역량**: R&D 투자, 특허, 신기술 도입, AI/디지털 전환
+- **시장 확장**: 신규 시장 진출, 글로벌 확장, M&A 전략
+- **경쟁우위**: 브랜드 파워, 차별화 요소, 진입장벽, 네트워크 효과
+
+#### **⚠️ 위험 요소 분석**
+- **시장 리스크**: 경기 침체, 경쟁 심화, 고객 수요 변화
+- **운영 리스크**: 공급망 중단, 생산 차질, 품질 문제
+- **규제 리스크**: 법규 변화, 환경 규제, 개인정보보호
+- **재무 리스크**: 유동성, 신용, 환율, 금리 위험
+
+#### **👔 경영진 평가**
+- **전략적 비전**: 명확한 전략, 실행 역량, 장기적 관점
+- **투명성**: 소통 방식, 정보 공개 수준, 주주와의 관계
+- **신뢰성**: 과거 약속 이행, 일관된 메시지, 리더십 안정성
+
+#### **💰 재무 건전성 신호**
+- **현금 흐름**: 영업 현금 흐름의 질과 안정성
+- **부채 관리**: 부채 수준, 만기 구조, 이자 부담
+- **자본 효율성**: 자본 배분, 주주 환원 정책
+
+### 🔍 선정 기준
+
+1. **미래 예측력**: 과거 재무제표로는 알 수 없는 미래 전망과 전략
+2. **조기 신호**: 재무 지표에 반영되기 전 텍스트에서 포착되는 변화
+3. **경영진 인사이트**: 숫자로는 표현할 수 없는 경영진의 역량과 비전
+4. **정보 비대칭**: 대부분 투자자가 꼼꼼히 읽지 않는 방대한 텍스트 정보
+5. **맥락적 이해**: 산업 환경, 규제 변화, 경쟁 상황에 대한 종합적 관점
+
+## 주요 기능
+
+### 🔍 데이터 추출
+- **EDGAR 크롤러**: 속도 제한과 오류 복구를 지원하는 고성능 비동기 크롤러
+- **섹션 파싱**: 10-K 보고서의 15개 이상 섹션을 정확하게 추출
+- **다양한 포맷 지원**: HTML, XML, 텍스트 등 모든 파일링 형식 처리
+
+### 🧠 AI 기반 분석
+- **정성 분석 엔진**: NLP를 활용한 분석 및 위험 평가
+- **투자 자문 AI**: GPT-4 기반 투자 인사이트 제공 및 추천 시스템
+- **대화형 채팅 인터페이스**: AI 투자 자문가와 실시간 상담
+- **자동 평가 시스템**: 다차원 정성 평가 점수 자동 산출
+
+### 📊 종합 보고서
+- **실시간 대시보드**: 투자 지표와 기업 성과를 한눈에 확인
+- **맞춤형 보고서**: 기업별 분석 리포트 생성
+- **다양한 내보내기**: JSON, CSV, Markdown 형식 지원
+- **자동 실행**: schedular를 활용한 자동 분석 실행 가능
+
+### ⚡ 성능 및 확장성
+- **비동기 처리**: 대용량 데이터를 효율적으로 처리
+- **클라우드 데이터베이스**: Supabase와 연동된 최적화된 쿼리 시스템
+- **스마트 캐싱**: 지능적인 데이터 캐싱과 증분 업데이트
+- **안정적인 오류 처리**: 자동 재시도와 복구 메커니즘
+
+
+## 📦 설치 방법
+
+### 시스템 요구사항
+
+- Python 3.8 이상
+- Supabase 계정 및 데이터베이스
+- SEC API 규정 준수 (적절한 User-Agent 헤더 필수)
+
+### 설치 과정
+
+1. **저장소 복제**
 ```bash
 git clone <repository-url>
 cd edgar-10k-analyzer
 ```
 
-2. **Install dependencies**
+2. **필요 패키지 설치**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **Download NLTK data**
+3. **NLTK 데이터 다운로드**
 ```bash
 python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('wordnet'); nltk.download('averaged_perceptron_tagger')"
 ```
 
-4. **Configure environment**
+4. **환경 설정**
 ```bash
-cp .env .env
-# Edit .env with your Supabase credentials and settings
+cp .env.example .env
+# .env 파일을 열어 Supabase 인증 정보와 설정값 입력
 ```
 
-5. **Set up Supabase database**
-   - Create a new Supabase project
-   - Run the SQL schema from `src/database/schema.py` in your Supabase SQL editor
-   - Update your `.env` file with connection details
+## 🗄️ Supabase 데이터베이스 구성
 
-## 🚀 Usage
+**중요**: Supabase Python 클라이언트는 테이블을 자동으로 생성하지 않습니다. 아래 단계를 따라 직접 설정해야 합니다.
 
-### Command Line Interface
+### 설정 단계
 
-The application provides a comprehensive CLI with multiple commands:
+1. **Supabase 프로젝트 생성**
+   - [Supabase](https://supabase.com)에 로그인
+   - 새 프로젝트 생성
+
+2. **테이블 생성**
+   - Supabase 대시보드에서 SQL Editor 열기
+   - `src/database/schema.py`의 `CREATE_TABLES_SQL` 변수 내용 복사
+   - SQL Editor에 붙여넣고 실행
+
+3. **환경 변수 설정**
+```env
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_KEY=your-anon-key
+SUPABASE_SERVICE_KEY=your-service-role-key
+```
+
+### 데이터베이스 테이블 구조
+
+- `companies` - 기업 기본 정보
+- `filings` - 10-K 보고서 메타데이터  
+- `qualitative_sections` - 추출된 텍스트 섹션
+- `sentiment_analysis` - 감성 분석 결과
+- `key_themes` - 핵심 주제 분석
+- `risk_factors` - 위험 요소 평가
+- `qualitative_scores` - 정성 평가 점수
+- `investment_analysis` - 최종 투자 분석 및 추천
+
+## 🚀 사용 방법
+
+### 명령줄 인터페이스
+
+다양한 명령어를 통해 시스템을 제어할 수 있습니다:
 
 ```bash
-# Initialize company database
+# 기업 데이터베이스 초기화
 python main.py init-companies
 
-# Run analysis pipeline (test mode - 5 companies)
+# 테스트 모드로 분석 실행 (5개 기업)
 python main.py pipeline --mode test --companies 5
 
-# Run full pipeline (all top 50 NASDAQ companies)
+# 전체 분석 실행 (NASDAQ 상위 50개 기업)
 python main.py pipeline --mode full --filings 2
 
-# Launch interactive dashboard
+# 대화형 대시보드 실행
 python main.py dashboard
 
-# Generate market report
+# 시장 보고서 생성
 python main.py report --format markdown
 
-# Generate company-specific analysis
+# 특정 기업 분석
 python main.py report --company AAPL
 
-# Check system status
+# 시스템 상태 확인
 python main.py status
 
-# Run automated scheduler
+# 자동 스케줄러 실행
 python main.py scheduler
 ```
 
-### Pipeline Modes
+### 파이프라인 실행 모드
 
-**Test Mode**: Process a limited number of companies for testing
+**테스트 모드**: 소수의 기업으로 기능 테스트
 ```bash
 python main.py pipeline --mode test --companies 10 --filings 1
 ```
 
-**Full Mode**: Process all top 50 NASDAQ companies
+**전체 모드**: NASDAQ 상위 50개 기업 전체 분석
 ```bash
 python main.py pipeline --mode full --filings 3
 ```
 
-### Dashboard
+### 대시보드
 
-Interactive dashboard showing:
-- Investment recommendation distribution
-- Top performing companies
-- Recent analysis activity
-- Market sentiment overview
+실시간 정보를 제공하는 대화형 대시보드:
+- 투자 추천 현황
+- 우수 성과 기업
+- 최근 분석 내역
+- 시장 전반 동향
 
 ```bash
 python main.py dashboard
 ```
 
-### Reports
+### 보고서 생성
 
-Generate various types of reports:
+다양한 형식의 보고서 생성:
 
-**Market Overview Report**
+**시장 전체 보고서**
 ```bash
 python main.py report --format markdown
 ```
 
-**Company Deep Dive**
+**기업별 상세 분석**
 ```bash
 python main.py report --company TSLA --format markdown
 ```
 
-**Export Data**
+**데이터 내보내기**
 ```bash
 python main.py report --format csv
 python main.py report --format json
 ```
 
-## 🔧 Configuration
+## 🔧 설정 옵션
 
-### Environment Variables
+### 환경 변수
 
-Key configuration options in `.env`:
+`.env` 파일의 주요 설정:
 
 ```env
 # EDGAR API
-SEC_API_KEY=optional_sec_api_key
-USER_AGENT=YourCompany YourName (yourname@yourcompany.com)
+SEC_API_KEY=선택적_sec_api_키
+USER_AGENT=회사명 담당자명 (email@company.com)
 
 # Supabase
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_KEY=your-supabase-anon-key
 SUPABASE_SERVICE_KEY=your-supabase-service-key
 
-# Pipeline Settings
+# 파이프라인 설정
 BATCH_SIZE=10
 MAX_CONCURRENT_REQUESTS=5
 REQUEST_DELAY=0.1
 
-# Logging
+# 로깅
 LOG_LEVEL=INFO
 LOG_FILE=logs/edgar_analyzer.log
 ```
 
-### Customization
+### 커스터마이징
 
-**Company Selection**: Modify `top_nasdaq_tickers` in `config/settings.py`
+**분석 대상 기업 변경**: `config/settings.py`의 `top_nasdaq_tickers` 수정
 
-**Analysis Weights**: Adjust scoring weights in `src/nlp/investment_scorer.py`
+**평가 가중치 조정**: `src/nlp/investment_scorer.py`의 점수 가중치 변경
 
-**NLP Models**: Configure sentiment models in `src/nlp/qualitative_analyzer.py`
+**NLP 모델 설정**: `src/nlp/qualitative_analyzer.py`의 감성 분석 모델 구성
 
-## 📊 Data Model
+## 📊 데이터 모델
 
-### Core Entities
+### 핵심 구성 요소
 
-- **Companies**: NASDAQ company information and CIK mappings
-- **Filings**: 10-K filing metadata and processing status
-- **Qualitative Sections**: Extracted text sections with metadata
-- **Sentiment Analysis**: Multi-model sentiment scores
-- **Key Themes**: Identified business themes and keywords
-- **Risk Factors**: Categorized and scored risk assessments
-- **Investment Analysis**: Final recommendations and scores
+- **Companies**: NASDAQ 기업 정보 및 CIK 매핑
+- **Filings**: 10-K 보고서 메타데이터 및 처리 상태
+- **Qualitative Sections**: 추출된 텍스트 섹션과 메타데이터
+- **Sentiment Analysis**: 다중 모델 감성 점수
+- **Key Themes**: 주요 비즈니스 테마 및 키워드
+- **Risk Factors**: 분류된 위험 요소와 평가 점수
+- **Investment Analysis**: 최종 투자 추천 및 점수
 
-### Investment Scoring
+### 투자 평가 체계
 
-The system generates composite investment scores based on:
+다음 요소들을 종합하여 투자 점수를 산출합니다:
 
-- **Sentiment (25%)**: Overall management tone and outlook
-- **Risk (35%)**: Risk factor analysis and severity
-- **Growth (20%)**: Growth indicators and opportunities
-- **Management (10%)**: Management quality and strategy clarity
-- **Financial Health (10%)**: Financial stress indicators
+- **감성 분석 (25%)**: 경영진의 어조와 전망
+- **위험 평가 (35%)**: 위험 요소의 심각도와 다양성
+- **성장 잠재력 (20%)**: 성장 지표와 기회 요인
+- **경영 역량 (10%)**: 경영진의 자질과 전략의 명확성
+- **재무 건전성 (10%)**: 재무적 스트레스 지표
 
-## 🤖 AI/NLP Capabilities
+## 🤖 AI/NLP 기능
 
-### Sentiment Analysis
-- **TextBlob**: Basic polarity and subjectivity analysis
-- **BERT**: Advanced contextual sentiment classification
-- **Financial Domain**: Specialized business terminology handling
+### 감성 분석
+- **TextBlob**: 기본 극성 및 주관성 분석
+- **BERT**: 고급 문맥 기반 감성 분류
+- **금융 특화**: 비즈니스 전문 용어 처리
 
-### Theme Extraction
-- **TF-IDF Vectorization**: Term importance scoring
-- **K-Means Clustering**: Automatic theme grouping
-- **Business Context**: Domain-specific keyword categorization
+### 주제 추출
+- **TF-IDF 벡터화**: 용어 중요도 평가
+- **K-평균 클러스터링**: 자동 주제 그룹화
+- **비즈니스 맥락화**: 산업별 키워드 분류
 
-### Risk Assessment
-- **Pattern Recognition**: Automated risk factor identification
-- **Severity Scoring**: Risk impact and likelihood assessment
-- **Categorization**: Market, operational, regulatory, financial risks
+### 위험 평가
+- **패턴 인식**: 자동 위험 요소 식별
+- **심각도 평가**: 위험의 영향과 발생 가능성 분석
+- **위험 분류**: 시장, 운영, 규제, 재무 위험
 
-## 📈 Investment Recommendations
+## 📈 투자 추천 체계
 
-### Recommendation Scale
-- **Strong Buy**: Score > 80, high confidence
-- **Buy**: Score > 65, good fundamentals
-- **Hold**: Score 45-65, mixed signals
-- **Sell**: Score 30-45, concerns present
-- **Strong Sell**: Score < 30, significant risks
+### 추천 등급
+- **적극 매수**: 점수 > 80, 높은 확신도
+- **매수**: 점수 > 65, 긍정적 전망
+- **보유**: 점수 45-65, 중립적 신호
+- **매도**: 점수 30-45, 우려 사항 존재
+- **적극 매도**: 점수 < 30, 심각한 위험
 
-### Analysis Components
-- **Qualitative Factors**: Management tone, strategic clarity
-- **Risk Profile**: Risk diversity and severity
-- **Growth Potential**: Innovation and market expansion
-- **Competitive Position**: Advantage and differentiation
-- **Financial Health**: Stress indicators and cash flow
+### 분석 요소
+- **정성적 요인**: 경영진 메시지, 전략의 명확성
+- **위험 프로필**: 위험의 다양성과 심각도
+- **성장 가능성**: 혁신과 시장 확대 기회
+- **경쟁 우위**: 차별화 요소와 시장 지위
+- **재무 안정성**: 스트레스 지표와 현금 흐름
 
-## 🗓️ Automation
+## 🗓️ 자동화
 
-### Scheduled Runs
-The pipeline can run automatically on a schedule:
+### 정기 실행
+스케줄을 설정하여 자동으로 분석을 진행할 수 있습니다:
 
 ```bash
-# Weekly runs every Sunday at 2 AM
+# 매주 일요일 오전 2시 자동 실행
 python main.py scheduler
 ```
 
-### Batch Processing
-- Configurable batch sizes for rate limiting
-- Concurrent processing with respect for API limits
-- Error handling and retry mechanisms
-- Progress tracking and statistics
+### 배치 처리
+- 속도 제한을 고려한 배치 크기 조정
+- API 제한을 준수하는 동시 처리
+- 자동 오류 복구 및 재시도
+- 실시간 진행 상황 모니터링
 
-## 📋 Outputs
+## 📋 출력 형식
 
-### Dashboard
-- Real-time investment recommendations
-- Market sentiment distribution
-- Top performing companies
-- Recent analysis activity
+### 대시보드
+- 실시간 투자 추천 현황
+- 시장 감성 분포도
+- 상위 성과 기업
+- 최근 분석 활동
 
-### Reports
-- **Markdown**: Human-readable investment reports
-- **JSON**: Structured data for API integration
-- **CSV**: Spreadsheet-compatible data export
+### 보고서
+- **Markdown**: 읽기 쉬운 투자 분석 보고서
+- **JSON**: API 연동을 위한 구조화 데이터
+- **CSV**: 스프레드시트 호환 데이터
 
-### Logs
-- Comprehensive logging with rotation
-- Error tracking and debugging information
-- Performance metrics and statistics
+### 로그
+- 자동 로그 순환 기능
+- 오류 추적 및 디버깅 정보
+- 성능 지표 및 통계
 
-## ⚠️ Important Disclaimers
+## ⚠️ 중요 안내사항
 
-- **Not Investment Advice**: This analysis is for informational purposes only
-- **SEC Compliance**: Ensure your User-Agent header complies with SEC guidelines
-- **Rate Limiting**: Respect EDGAR API rate limits (10 requests per second)
-- **Data Quality**: Results depend on text extraction accuracy
-- **Model Limitations**: NLP models may miss nuanced business context
+- **투자 조언 아님**: 본 분석은 참고용이며, 실제 투자 결정의 유일한 근거로 사용해서는 안 됩니다
+- **SEC 규정 준수**: User-Agent 헤더를 SEC 가이드라인에 맞게 설정하세요
+- **API 제한**: EDGAR API 속도 제한(초당 10회)을 준수합니다
+- **데이터 정확도**: 분석 결과는 텍스트 추출의 정확도에 영향을 받습니다
+- **모델 한계**: NLP 모델이 복잡한 비즈니스 맥락을 완벽히 이해하지 못할 수 있습니다
 
-## 🔧 Troubleshooting
+## 🔧 문제 해결
 
-### Common Issues
+### 자주 발생하는 문제
 
-**SEC API Errors**
+**SEC API 오류**
 ```bash
-# Ensure proper User-Agent header
-USER_AGENT="YourCompany YourName (yourname@yourcompany.com)"
+# User-Agent 헤더 설정 확인
+USER_AGENT="회사명 담당자명 (email@company.com)"
 ```
 
-**Database Connection Issues**
+**데이터베이스 연결 오류**
 ```bash
-# Verify Supabase credentials
-python -c "from src.database.connection import db_client; print('Connection OK')"
+# Supabase 인증 정보 확인
+python -c "from src.database.connection import db_client; print('연결 성공')"
 ```
 
-**NLTK Data Missing**
+**NLTK 데이터 누락**
 ```bash
 python -c "import nltk; nltk.download('all')"
 ```
 
-**Memory Issues with Large Filings**
-- Reduce batch size in settings
-- Limit filings per company
-- Increase system memory allocation
-
-### Performance Optimization
-
-- Use SSD storage for faster text processing
-- Increase `MAX_CONCURRENT_REQUESTS` cautiously
-- Consider using PostgreSQL connection pooling
-- Monitor rate limits and adjust delays
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- SEC EDGAR API for providing access to public filings
-- Supabase for database infrastructure
-- HuggingFace Transformers for NLP models
-- Rich library for beautiful CLI output
-
-## 📞 Support
-
-For questions, issues, or feature requests:
-1. Check the [Issues](link-to-issues) page
-2. Review the troubleshooting section
-3. Create a new issue with detailed information
-
----
-
-**Built with ❤️ for intelligent investment analysis**
+**대용량 파일 처리 시 메모리 부족**
+- 설정에서 배치 크기 축소
+- 기업당 분석 파일 수 제한
+- 시스템 메모리 할당량 증가
