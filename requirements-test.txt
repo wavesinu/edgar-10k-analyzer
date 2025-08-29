@@ -1,0 +1,109 @@
+# Testing Dependencies for EDGAR 10-K Analyzer
+# Install with: pip install -r requirements-test.txt
+
+# Core Testing Framework
+pytest>=7.4.0                    # Modern testing framework with async support
+pytest-asyncio>=0.21.0           # Async test support for asyncio code
+pytest-cov>=4.1.0                # Coverage reporting integration
+pytest-mock>=3.11.0              # Enhanced mocking capabilities
+pytest-xdist>=3.3.0              # Parallel test execution
+pytest-html>=3.2.0               # HTML test reports
+pytest-json-report>=1.5.0        # JSON test reports for CI
+
+# Test Utilities and Fixtures
+factory-boy>=3.3.0               # Test data generation
+faker>=19.0.0                    # Fake data generation
+responses>=0.23.0                # HTTP request mocking
+freezegun>=1.2.0                 # Time mocking for date/time tests
+parameterized>=0.9.0             # Parameterized test cases
+
+# Performance and Profiling
+pytest-benchmark>=4.0.0          # Performance benchmarking
+pytest-profiling>=1.7.0          # Code profiling during tests
+memory-profiler>=0.60.0          # Memory usage profiling
+
+# Code Quality and Analysis
+pytest-flake8>=1.1.0             # Linting integration
+pytest-mypy>=0.10.0              # Type checking integration
+pytest-bandit>=0.3.0             # Security testing
+
+# Test Data Management
+pytest-datadir>=1.4.0            # Test data directory management
+pytest-datafiles>=3.0.0          # Test data file fixtures
+
+# Reporting and Documentation
+pytest-clarity>=1.0.0            # Better test failure output
+pytest-sugar>=0.9.0              # Enhanced test output formatting
+pytest-instafail>=0.5.0          # Immediate failure reporting
+
+# Database Testing
+pytest-postgresql>=5.0.0         # PostgreSQL testing utilities (if needed for local testing)
+pytest-redis>=3.0.0              # Redis testing utilities (if used for caching)
+
+# Web and API Testing
+pytest-httpserver>=1.0.0         # HTTP server for testing
+pytest-aiohttp>=1.0.0            # aiohttp testing utilities
+httpx>=0.24.0                    # Modern HTTP client for testing
+
+# Development and Debugging
+pytest-pdb>=0.2.0                # PDB integration for debugging
+pytest-picked>=0.4.0             # Run tests related to changed files
+pytest-watch>=4.2.0              # Continuous testing (watch mode)
+
+# CI/CD Integration
+pytest-github-actions-annotate-failures>=0.2.0  # GitHub Actions integration
+pytest-env>=0.8.0                # Environment variable management
+
+# Load and Stress Testing
+locust>=2.16.0                   # Load testing framework
+pytest-stress>=1.0.0             # Stress testing utilities
+
+# Snapshot Testing
+pytest-snapshot>=0.9.0           # Snapshot testing for regression
+pytest-golden>=0.2.0             # Golden file testing
+
+# Async Testing Utilities
+pytest-trio>=0.8.0               # Trio async framework support (if used)
+aioresponses>=0.7.0              # Aiohttp response mocking
+
+# Test Environment Management
+python-dotenv>=1.0.0             # Environment variable management
+pytest-env-info>=1.0.0           # Environment information reporting
+
+# Security Testing
+safety>=2.3.0                    # Security vulnerability scanning
+bandit>=1.7.0                    # Security linting
+
+# Documentation Testing
+pytest-doctestplus>=1.0.0        # Enhanced doctest support
+
+# Test Data Validation
+cerberus>=1.3.0                  # Data validation schemas
+jsonschema>=4.19.0               # JSON schema validation
+
+# Optional: Advanced Testing Tools (install as needed)
+# pytest-bdd>=6.1.0              # Behavior Driven Development
+# pytest-spec>=3.2.0             # Specification-style output
+# pytest-testmon>=2.0.0          # Test selection based on code changes
+# pytest-repeat>=0.9.0           # Repeat tests for flakiness detection
+# pytest-randomly>=3.13.0        # Randomize test order
+# pytest-timeout>=2.1.0          # Test timeout management
+# pytest-rerunfailures>=12.0     # Rerun failed tests automatically
+
+# Platform-specific dependencies
+# Windows
+# pytest-windows-wheel>=0.1.0   # Windows-specific testing utilities
+
+# macOS
+# pytest-macos>=0.1.0           # macOS-specific testing utilities
+
+# Linux  
+# pytest-linux>=0.1.0           # Linux-specific testing utilities
+
+# Container Testing
+# testcontainers>=3.7.0         # Docker container testing
+# pytest-docker>=2.0.0          # Docker integration for tests
+
+# Machine Learning Testing (if AI components need specialized testing)
+# pytest-ml>=0.1.0              # ML model testing utilities
+# great-expectations>=0.17.0     # Data quality testing
